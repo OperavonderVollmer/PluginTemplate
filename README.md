@@ -1,37 +1,72 @@
-# Ophelia's Plugin Template
+# 🧩 Ophelia Plugin Template
 
-Abstract Class to be used by plugins under the Ophelia script family.
-**Does not run by itself.**
+An **abstract base class** defining the standardized interface for all plugins in the Ophelia suite.  
+
+***This class cannot run by itself.***
+
+---
+
+## ⚙️ Overview
+
+The `OpheliaTemplate` class serves as the foundation for all plugins used by the Ophelia system.  
+It defines required metadata, enforces structure, and provides helper methods for user interaction, execution, and error handling.
+
+All plugin metadata is accessible via the internal dictionary:
+
+```python
+self._meta = {
+    "name": str,
+    "prompt": str,
+    "description": str,
+    "needs_args": bool,
+    "commands": list[str],
+    "help_text": str,
+    "dev_only": bool,
+    "git_repo": str
+}
+```
 
 ## Parameters
 
-1. Name
-2. Prompt
-   - Used under prep_execute method to print the line.
-3. Description
-4. Needs Args
-   - An optional bool indicating the plugins need of arguments, used in prep_execute method
-5. Modes
-   - An optional list dictating the plugins different modes
-6. Help Text
-7. Dev Bool
-   - A bool indicating access level. Used for sensitive transactions
-8. Git Repo
-
-Attributes are accessible under the meta dictionary.
+| Name            | Type        | Description                                                                            |
+| --------------- | ----------- | -------------------------------------------------------------------------------------- |
+| **name**        | `str`       | The identifier of the plugin.                                                          |
+| **prompt**      | `str`       | Optional string displayed to the user during `prep_execute`.                           |
+| **description** | `str`       | Brief description of the plugin’s functionality.                                       |
+| **needs_args**  | `bool`      | Indicates whether the plugin requires user input or arguments. Used in `prep_execute`. |
+| **commands**    | `list[str]` | Optional list defining operational commands for the plugin.                            |
+| **help_text**   | `str`       | Text shown when the user requests plugin-specific help.                                |
+| **dev_only**    | `bool`      | Marks plugins intended only for developers or sensitive operations.                    |
+| **git_repo**    | `str`       | The associated Git repository URL, if applicable.                                      |
 
 ## Methods
 
-1. prep_execute
-   - Method that runs prior to execute. Works as both user input interface and notification of the script's operations.
-   - Returns a string if a single user input is required.
-   - Returns a tuple of (input, mode) if the plugin defines operational modes.
-   - Returns None if no input is needed, cancelled, or an error occurs.
+1. Prep Execute
+   `prep_execute(self, input_callable: Callable = None, output_callable: Callable = None, *args, **kwargs) -> str | tuple[str, str] | None`
 
-2. execute
-   - Runs the scripts main function.
-   - Would typically run prep_execute followed by the specific script's **.run** method.
+   Prepares the plugin for execution.
+   Handles prompt display, user input collection, and mode validation.
 
-3. direct_execute
-   - Directly execute the scripts main function without the need of prep_execute user interface.
+      Behavior:
+
+      - Outputs the defined prompt.
+      - If the plugin requires arguments:
+         - Returns a `str` if a single user input is expected.
+         - Returns a `tuple (input, mode)` if operational modes are defined.
+      - Returns `None` if:
+         - No input is required,
+         - The operation is cancelled (e.g., `Ctrl+C`), or
+         - An error occurs.
+
+2. Execute
+   `execute(self, *args, **kwargs)`
+
+   - Runs the plugin's primary logic.
+   - Would typically run `prep_execute` followed by the plugins's main entry point, such as a `.run()` method.
+
+3. Direct Execute
+   `direct_execute(self, *args, **kwargs)`
+
+   - Directly execute the plugin's primary logic without the need of `prep_execute` user interface.
    - Assumes prior preparation of parameters to be used.
+   - Intended for automation or preconfigured workflows where arguments are already known.

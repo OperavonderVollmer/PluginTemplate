@@ -16,8 +16,8 @@ class ophelia_plugin(ABC):
         A description of the plugin.
     needs_args : bool, optional
         Whether the plugin requires arguments.
-    modes : list, optional
-        A list of operational modes.
+    commands : list, optional
+        A list of operational commands.
     help_text : str, optional
         Additional help text for the plugin.
     access_level : int, optional
@@ -47,7 +47,7 @@ class ophelia_plugin(ABC):
             prompt:             str = "", 
             description:        str = "", 
             needs_args:         bool = False, 
-            modes:              list | None = None, 
+            commands:              list | None = None,
             help_text:          str = "", 
             access_level:       int = 0,
             git_repo:           str = "",
@@ -58,7 +58,7 @@ class ophelia_plugin(ABC):
             "prompt":           prompt, 
             "description":      description,
             "needs_args":       needs_args, 
-            "modes":            modes or [], 
+            "commands":         commands or [], 
             "help_text":        help_text, 
             "access_level":     access_level,
             "git_rep":          git_repo,
@@ -115,8 +115,8 @@ class ophelia_plugin(ABC):
                         if self._meta["prompt"]: print(self._meta["prompt"])
                         user_input = opr.input_from(name=self._meta["name"], message="Input (Ctrl+C to cancel)", do_print=True)
                         
-                        if self._meta["modes"]:
-                            for mode in self._meta["modes"]:
+                        if self._meta["commands"]:
+                            for mode in self._meta["commands"]:
                                 if mode in user_input:
                                     find = user_input.replace(mode, "").strip()
                                     user_input = [find, mode]
