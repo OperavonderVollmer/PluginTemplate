@@ -23,14 +23,12 @@ Attributes are accessible under the meta dictionary.
 ## Methods
 
 1. prep_execute
-
    - Method that runs prior to execute. Works as both user input interface and notification of the script's operations.
    - Returns a string if a single user input is required.
    - Returns a tuple of (input, mode) if the plugin defines operational modes.
    - Returns None if no input is needed, cancelled, or an error occurs.
 
 2. execute
-
    - Runs the scripts main function.
    - Would typically run prep_execute followed by the specific script's **.run** method.
 
