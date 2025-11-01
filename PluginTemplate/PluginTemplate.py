@@ -20,8 +20,8 @@ class ophelia_plugin(ABC):
         A list of operational modes.
     help_text : str, optional
         Additional help text for the plugin.
-    dev_bool : bool, optional
-        A flag indicating whether the plugin is a development plugin.
+    access_level : int, optional
+        A flag indicating the plugin's access level.
     git_repo : str, optional
         The GitHub repository URL for the plugin.
 
@@ -32,11 +32,11 @@ class ophelia_plugin(ABC):
 
     Methods
     -------
-    prep_execute(input_callable=None, output_callable=None, *args, **kwargs)
+    prep_execute
         Orchestrates plugin execution by preparing user interaction and handling input/output.
-    execute(*args, **kwargs)
+    execute
         Executes the plugin.
-    direct_execute(*args, **kwargs)
+    direct_execute
         Executes the plugin directly without user interaction.
 
     
@@ -49,7 +49,7 @@ class ophelia_plugin(ABC):
             needs_args:         bool = False, 
             modes:              list | None = None, 
             help_text:          str = "", 
-            dev_bool:           bool = False,
+            access_level:       int = 0,
             git_repo:           str = "",
         ):
 
@@ -60,7 +60,7 @@ class ophelia_plugin(ABC):
             "needs_args":       needs_args, 
             "modes":            modes or [], 
             "help_text":        help_text, 
-            "dev_bool":         dev_bool,
+            "access_level":     access_level,
             "git_rep":          git_repo,
         }
     
