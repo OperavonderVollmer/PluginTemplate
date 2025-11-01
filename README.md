@@ -7,10 +7,10 @@ Abstract Class to be used by plugins under the Ophelia script family.
 
 1. Name
 2. Prompt
-   - Used under [prep_execute](https://github.com/OperavonderVollmer/PluginTemplate/blob/main/README.md#L24) method to print the line.
+   - Used under prep_execute method to print the line.
 3. Description
 4. Needs Args
-   - An optional bool indicating the plugins need of arguments, used in [prep_execute](https://github.com/OperavonderVollmer/PluginTemplate/blob/main/README.md#L24) method
+   - An optional bool indicating the plugins need of arguments, used in prep_execute method
 5. Modes
    - An optional list dictating the plugins different modes
 6. Help Text
@@ -32,8 +32,8 @@ Attributes are accessible under the meta dictionary.
 2. execute
 
    - Runs the scripts main function.
-   - Would typically run [prep_execute](https://github.com/OperavonderVollmer/PluginTemplate/blob/main/README.md#L24) followed by the specific script's **.run** method.
+   - Would typically run prep_execute followed by the specific script's **.run** method.
 
 3. direct_execute
-   - Directly execute the scripts main function without the need of[prep_execute's](https://github.com/OperavonderVollmer/PluginTemplate/blob/main/README.md#L24) user interface.
+   - Directly execute the scripts main function without the need of prep_execute user interface.
    - Assumes prior preparation of parameters to be used.
