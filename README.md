@@ -1,6 +1,6 @@
 # 🧩 Ophelia Plugin Template
 
-An **abstract base class** defining the standardized interface for all plugins in the Ophelia script family.  
+An **abstract base class** defining the standardized interface for all plugins in the Ophelia suite.  
 
 ***This class cannot run by itself.***
 
