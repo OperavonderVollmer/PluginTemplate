@@ -38,6 +38,8 @@ class ophelia_plugin(ABC):
         Executes the plugin.
     direct_execute
         Executes the plugin directly without user interaction.
+    clean_up
+        Performs cleanup tasks after executing the plugin.
 
     
     """
@@ -148,8 +150,16 @@ class ophelia_plugin(ABC):
         """
         pass
 
+    @abstractmethod
     def direct_execute(self, *args, **kwargs):
         """
         Directly executes plugin logic without user interaction. Used for automation and testing.
+        """
+        pass
+
+    @abstractmethod
+    def clean_up(self, *args, **kwargs):
+        """
+        Performs cleanup tasks after executing the plugin.
         """
         pass
