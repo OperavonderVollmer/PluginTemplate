@@ -57,7 +57,7 @@ class ophelia_plugin(ABC):
 
         self._meta: dict = {
             "name":             name, 
-            "prompt":           prompt, 
+            "prompt":           prompt,  
             "description":      description,
             "needs_args":       needs_args, 
             "command_map":      command_map or {}, 
@@ -142,7 +142,7 @@ class ophelia_plugin(ABC):
 
         return None
 
-    def run_command(self, command: str, *args, **kwargs):
+    def run_command(self, command: str="", *args, **kwargs):
 
         """
         Executes a command associated with the plugin, if applicable.
@@ -163,7 +163,7 @@ class ophelia_plugin(ABC):
         any
             The result of the command function, if applicable. Otherwise, None.
         """
-          commands = list(self._meta["command_map"].keys())
+        commands = list(self._meta["command_map"].keys())
 
         opr.list_choices(choices=commands, title=f"Available commands for {self._meta['name']}")
 
