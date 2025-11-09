@@ -163,11 +163,44 @@ class ophelia_plugin(ABC):
         any
             The result of the command function, if applicable. Otherwise, None.
         """
+          commands = list(self._meta["command_map"].keys())
 
-        if command in self._meta["command_map"]:
-            return self._meta["command_map"][command](*args, **kwargs)
+        opr.list_choices(choices=commands, title=f"Available commands for {self._meta['name']}")
 
-        return None
+        # If no command is pre-specified, ask user to select one
+        if command is None:
+            raw = opr.input_from(
+                name=self._meta["name"],
+                message=f"Select command (1 - {len(commands)}): "
+            )
+
+            # Validate input
+            try:
+                choice = int(raw)
+                if choice < 1 or choice > len(commands):
+                    raise ValueError
+                command = commands[choice - 1]
+            except ValueError as e:
+                opr.error_pretty(
+                    exc=e,
+                    name=self._meta["name"],
+                    message=f"Invalid input. Please enter a number between 1 and {len(commands)}.",
+                    level="INFO"
+                )
+                return None
+
+        # Execute command if valid
+        func = self._meta["command_map"].get(command)
+        if func is None:
+            opr.error_pretty(
+                exc=None,
+                name=self._meta["name"],
+                message=f"Unknown command: {command}",
+                level="INFO"
+            )
+            return None
+
+        return func(*args, **kwargs)
 
 
     @abstractmethod
