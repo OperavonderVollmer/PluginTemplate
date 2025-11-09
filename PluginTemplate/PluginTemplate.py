@@ -142,7 +142,7 @@ class ophelia_plugin(ABC):
 
         return None
 
-    def run_command(self, command: str="", *args, **kwargs):
+    def run_command(self, command: str=None, *args, **kwargs):
 
         """
         Executes a command associated with the plugin, if applicable.
