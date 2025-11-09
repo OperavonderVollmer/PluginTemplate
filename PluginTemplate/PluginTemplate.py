@@ -16,8 +16,8 @@ class ophelia_plugin(ABC):
         A description of the plugin.
     needs_args : bool, optional
         Whether the plugin requires arguments.
-    commands : list, optional
-        A list of operational commands.
+    command_map : list, optional
+        A dictionary of operational commands. Key = command, value = function.
     help_text : str, optional
         Additional help text for the plugin.
     access_level : int, optional
@@ -49,7 +49,7 @@ class ophelia_plugin(ABC):
             prompt:             str = "", 
             description:        str = "", 
             needs_args:         bool = False, 
-            commands:              list | None = None,
+            command_map:        dict = None,    
             help_text:          str = "", 
             access_level:       int = 0,
             git_repo:           str = "",
@@ -60,12 +60,14 @@ class ophelia_plugin(ABC):
             "prompt":           prompt, 
             "description":      description,
             "needs_args":       needs_args, 
-            "commands":         commands or [], 
+            "command_map":      command_map or {}, 
             "help_text":        help_text, 
             "access_level":     access_level,
             "git_rep":          git_repo,
         }
     
+
+
     def prep_execute(self, input_callable: Callable = None, output_callable: Callable = None, *args, **kwargs) -> str | tuple[str, str] | None:  # type: ignore
         """
         Orchestrates plugin execution by preparing user interaction and handling input/output.
@@ -117,8 +119,8 @@ class ophelia_plugin(ABC):
                         if self._meta["prompt"]: print(self._meta["prompt"])
                         user_input = opr.input_from(name=self._meta["name"], message="Input (Ctrl+C to cancel)", do_print=True)
                         
-                        if self._meta["commands"]:
-                            for mode in self._meta["commands"]:
+                        if self._meta["command_map"]:
+                            for mode in self._meta["command_map"].keys():
                                 if mode in user_input:
                                     find = user_input.replace(mode, "").strip()
                                     user_input = [find, mode]
@@ -140,7 +142,32 @@ class ophelia_plugin(ABC):
 
         return None
 
+    def run_command(self, command: str, *args, **kwargs):
 
+        """
+        Executes a command associated with the plugin, if applicable.
+
+        Parameters
+        ----------
+        command : str
+            The command to be executed.
+
+        *args : tuple
+            Positional arguments passed to the command function, if applicable.
+
+        **kwargs : dict
+            Keyword arguments passed to the command function, if applicable.
+
+        Returns
+        -------
+        any
+            The result of the command function, if applicable. Otherwise, None.
+        """
+
+        if command in self._meta["command_map"]:
+            return self._meta["command_map"][command](*args, **kwargs)
+
+        return None
 
 
     @abstractmethod
