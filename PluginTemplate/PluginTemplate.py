@@ -171,7 +171,7 @@ class ophelia_plugin(ABC):
         if command is None:
             raw = opr.input_from(
                 name=self._meta["name"],
-                message=f"Select command (1 - {len(commands)}): "
+                message=f"Select command (1 - {len(commands)})"
             )
 
             # Validate input
