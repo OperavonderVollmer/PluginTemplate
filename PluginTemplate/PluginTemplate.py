@@ -171,23 +171,19 @@ class ophelia_plugin(ABC):
         if command is None:
             raw = opr.input_from(
                 name=self._meta["name"],
-                message=f"Select command (1 - {len(commands)})"
+                message=f"Select command (1 - {len(commands)}) or enter to cancel",
             )
 
             # Validate input
             try:
-                choice = int(raw)
-                if choice < 1 or choice > len(commands):
+                choice = int(raw.strip())
+                if not 1 <= choice <= len(commands) or raw == "":
                     raise ValueError
                 command = commands[choice - 1]
             except ValueError as e:
-                opr.error_pretty(
-                    exc=e,
-                    name=self._meta["name"],
-                    message=f"Invalid input. Please enter a number between 1 and {len(commands)}.",
-                    level="INFO"
-                )
+                opr.print_from(self._meta["name"], message=f"{self._meta["name"]} command cancelled")
                 return None
+
 
         # Execute command if valid
         func = self._meta["command_map"].get(command)
