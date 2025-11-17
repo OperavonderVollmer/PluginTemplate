@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from OperaPowerRelay import opr
 from typing import Callable
+from DSL import JS_Page
 
 class ophelia_plugin(ABC):
     """
@@ -219,3 +220,21 @@ class ophelia_plugin(ABC):
         Performs cleanup tasks after executing the plugin.
         """
         pass
+
+
+
+
+class ophelia_envelope(ABC):
+    def __init__(
+            self,
+            page_title: str,
+            page_data: JS_Page,       
+        ):
+        self.page_title = page_title
+        self.page_data = page_data
+
+    def export(self) -> dict:
+        return {
+            "page_title": self.page_title,
+            "data": self.page_data.serialize(),
+        }
