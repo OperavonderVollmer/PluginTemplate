@@ -63,7 +63,7 @@ class ophelia_plugin(ABC):
             "command_map":      command_map or {}, 
             "help_text":        help_text, 
             "access_level":     access_level,
-            "git_rep":          git_repo,
+            "git_repo":          git_repo,
         }
     
 
@@ -199,12 +199,12 @@ class ophelia_plugin(ABC):
         return func(*args, **kwargs)
 
 
-    @abstractmethod
     def execute(self, *args, **kwargs):
         """
         Performs the main execution logic for the plugin.
         """
-        pass
+        return self.run_command(*args, **kwargs)
+
 
     @abstractmethod
     def direct_execute(self, *args, **kwargs):
