@@ -1,7 +1,12 @@
 from abc import ABC, abstractmethod
 from OperaPowerRelay import opr
 from typing import Callable
-from DSL import JS_Page
+import os, sys
+root = os.path.dirname(os.path.abspath(__file__))
+if root not in sys.path:
+    sys.path.insert(0, root)
+import DSL
+import socket, json, struct
 
 class ophelia_plugin(ABC):
     """
@@ -225,10 +230,11 @@ class ophelia_plugin(ABC):
 
 
 class ophelia_envelope(ABC):
+
     def __init__(
             self,
             page_title: str,
-            page_data: JS_Page,       
+            page_data: DSL.JS_Page,       
         ):
         self.page_title = page_title
         self.page_data = page_data
@@ -238,3 +244,134 @@ class ophelia_envelope(ABC):
             "page_title": self.page_title,
             "data": self.page_data.serialize(),
         }
+
+
+class ophelia_input():
+
+    types = [
+        "console",
+        "browser",
+        ]
+    
+    HUD_HOST = "127.0.0.1"
+    HUD_PORT = 6990
+    DEFAULT_BROWSER_PROMPT = DSL.JS_Page(
+            title= "Input Required",
+            root= DSL.JS_Div(
+                id = "new-input-div",
+                children=[
+                    DSL.JS_TextBox(
+                        id = "new-input",
+                        label = "Input",
+                        hint = "Input Required",
+                        type = "text",
+                        ),
+                    ]
+                )
+            )
+
+    def get_types(self) -> list:
+        return self.types
+    
+    def _console_input(self, **kwargs):
+
+        answer = None
+        if kwargs.get("prompt", None):
+            
+            if kwargs.get("opr", True):
+                answer = opr.input_from(name=kwargs.get("name", "Input"), message=kwargs["prompt"])
+            else:
+                answer = input(kwargs["prompt"] + ": ")
+        else:
+            answer = input("Input: ")
+        return answer
+
+    def _browser_input(self, **kwargs):
+
+        answer = {}
+        prompt = kwargs.get("prompt", self.DEFAULT_BROWSER_PROMPT
+        )
+    
+
+        payload_json = json.dumps(prompt.serialize())
+        payload_bytes = payload_json.encode("utf-8")
+        payload_size = len(payload_bytes)
+
+
+        for attempt in range(1, 4):
+            try:
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+                    sock.settimeout(5*60)  # 5 minutes timeout
+                    sock.connect((self.HUD_HOST, self.HUD_PORT))
+                    size_packed = struct.pack("!I", payload_size)
+                    sock.sendall(size_packed + payload_bytes)
+
+                    answer_bytes = sock.recv(8192)
+                    answer_json = answer_bytes.decode("utf-8")
+                    answer = json.loads(answer_json)
+                    break
+                
+            except (ConnectionRefusedError, ConnectionResetError) as e:
+                opr.error_pretty(
+                    exc=e,
+                    name="Plugin Input",
+                    message=f"Connection with HUD failed. Attempt: {attempt}/3. Is the HUD running? - {e}",
+                )
+            except socket.gaierror as e:
+                opr.error_pretty(
+                    exc=e,
+                    name="Plugin Input",
+                    message=f"Invalid HUD host address. Attempt: {attempt}/3 - {e}",
+                )
+            except socket.timeout as e:
+                opr.error_pretty(
+                    exc=e,
+                    name="Plugin Input",
+                    message=f"Timed out, probably AFK. Breaking...",
+                )
+                break
+            except Exception as e:
+                opr.error_pretty(
+                    exc=e,
+                    name="Plugin Input",
+                    message=f"An unexpected error occurred during HUD communication. Attempt: {attempt}/3 - {e}",
+                )
+
+        return answer
+
+
+    def input(self, input_type: str = "console", **kwargs):
+        """
+        Parameters
+        ----------
+
+        type : str
+            The type of input to request.
+
+        **kwargs : dict
+            Additional keyword arguments specific to the input type.
+
+        Kwargs Scheme
+        ------
+
+        For "console" type:
+            - prompt : str
+                The prompt message to display to the user.
+            - opr : bool
+                Whether to use opr.input_from (True) or input (False).
+
+        For "browser" type:
+            - prompt : DSL.JS_Page
+                A page to display to the user.
+
+        """
+        
+        match input_type:
+            case "console":
+                return self._console_input(**kwargs)
+            case "browser":
+                return self._browser_input(**kwargs)
+            case _:
+                raise ValueError(f"Unhandled input type: {input_type}")
+
+            
