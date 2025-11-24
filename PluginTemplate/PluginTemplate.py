@@ -195,7 +195,7 @@ class ophelia_plugin(ABC):
         func = self._meta["command_map"].get(command)
         if func is None:
             opr.error_pretty(
-                exc=None,
+                exc=ValueError(f"Command '{command}' not found in command map."),
                 name=self._meta["name"],
                 message=f"Unknown command: {command}",
                 level="INFO"
@@ -248,6 +248,7 @@ class ophelia_envelope(ABC):
 
 class ophelia_input():
 
+
     types = [
         "console",
         "browser",
@@ -270,10 +271,31 @@ class ophelia_input():
                 )
             )
 
-    def get_types(self) -> list:
-        return self.types
+    @classmethod
+    def get_types(cls) -> list:
+        return cls.types
     
-    def _console_input(self, **kwargs):
+    @classmethod
+    def console_input(cls, **kwargs):
+        """
+        
+        Retrieves user input from the console. 
+
+        Parameters
+        ----------
+        prompt : str (default: None)
+            The prompt message to display to the user.
+        opr : bool (default: True)
+            Whether to use opr.input_from (True) or input (False).
+
+
+        Returns
+        -------
+        str
+            The user's input.
+
+        """
+
 
         answer = None
         if kwargs.get("prompt", None):
@@ -286,10 +308,26 @@ class ophelia_input():
             answer = input("Input: ")
         return answer
 
-    def _browser_input(self, **kwargs):
+    @classmethod
+    def browser_input(cls, **kwargs):
+
+        """
+        Retrieves user input from a web browser prompt.
+
+        Parameters
+        ----------
+        prompt : DSL.JS_Page (default: None)
+            The prompt message to display to the user.
+
+        Returns
+        -------
+        str
+            The user's input.
+
+        """
 
         answer = {}
-        prompt = kwargs.get("prompt", self.DEFAULT_BROWSER_PROMPT
+        prompt = kwargs.get("prompt", cls.DEFAULT_BROWSER_PROMPT
         )
     
 
@@ -302,7 +340,7 @@ class ophelia_input():
             try:
                 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
                     sock.settimeout(5*60)  # 5 minutes timeout
-                    sock.connect((self.HUD_HOST, self.HUD_PORT))
+                    sock.connect((cls.HUD_HOST, cls.HUD_PORT))
                     size_packed = struct.pack("!I", payload_size)
                     sock.sendall(size_packed + payload_bytes)
 
@@ -339,8 +377,8 @@ class ophelia_input():
 
         return answer
 
-
-    def input(self, input_type: str = "console", **kwargs):
+    @classmethod
+    def input(cls, input_type: str = "console", **kwargs):
         """
         Parameters
         ----------
@@ -365,12 +403,12 @@ class ophelia_input():
                 A page to display to the user.
 
         """
-        
+
         match input_type:
             case "console":
-                return self._console_input(**kwargs)
+                return cls.console_input(**kwargs)
             case "browser":
-                return self._browser_input(**kwargs)
+                return cls.browser_input(**kwargs)
             case _:
                 raise ValueError(f"Unhandled input type: {input_type}")
 

@@ -6,7 +6,7 @@ from typing import List, Dict, Any
 # Base Component Classes
 # -----------------------------
 
-class JSComponent(ABC):
+class JS_Component(ABC):
     """Base class for all components."""
 
     type: str = None
@@ -23,14 +23,14 @@ class JSComponent(ABC):
         }
 
 
-class JSContainer(JSComponent):
+class JS_Container(JS_Component):
     """Base class for components that may contain children."""
 
-    def __init__(self, id: str, children: List["JSComponent"] = None, **props):
+    def __init__(self, id: str, children: List["JS_Component"] = None, **props):
         super().__init__(id, **props)
         self.children = children or []
 
-    def add(self, *children: "JSComponent"):
+    def add(self, *children: "JS_Component"):
         self.children.extend(children)
         return self
 
@@ -44,15 +44,15 @@ class JSContainer(JSComponent):
 # Container Components
 # -----------------------------
 
-class JS_Div(JSContainer):
+class JS_Div(JS_Container):
     type = "div"
 
 
-class JS_Form(JSContainer):
+class JS_Form(JS_Container):
     type = "form"
 
 
-class JS_Section(JSContainer):
+class JS_Section(JS_Container):
     type = "section"
 
 
@@ -60,42 +60,42 @@ class JS_Section(JSContainer):
 # Leaf Components
 # -----------------------------
 
-class JS_Label(JSComponent):
+class JS_Label(JS_Component):
     type = "label"
 
     def __init__(self, id: str, text: str, **props):
         super().__init__(id, text=text, **props)
 
 
-class JS_TextBox(JSComponent):
+class JS_TextBox(JS_Component):
     type = "input"
 
     def __init__(self, id: str, label: str, hint: str = "", **props):
         super().__init__(id, label=label, hint=hint, **props)
 
 
-class JS_Select(JSComponent):
+class JS_Select(JS_Component):
     type = "select"
 
     def __init__(self, id: str, label: str, options: List[str], **props):
         super().__init__(id, label=label, options=options, **props)
 
 
-class JS_Checkbox(JSComponent):
+class JS_Checkbox(JS_Component):
     type = "checkbox"
 
     def __init__(self, id: str, label: str, options: List[str], **props):
         super().__init__(id, label=label, options=options, **props)
 
 
-class JS_Radio(JSComponent):
+class JS_Radio(JS_Component):
     type = "radio"
 
     def __init__(self, id: str, label: str, options: List[str], **props):
         super().__init__(id, label=label, options=options, **props)
 
 
-class JS_Button(JSComponent):
+class JS_Button(JS_Component):
     type = "button"
 
     def __init__(self, id: str, text: str, **props):
@@ -107,7 +107,7 @@ class JS_Button(JSComponent):
 # -----------------------------
 
 class JS_Page:
-    def __init__(self, title: str, root: JSContainer):
+    def __init__(self, title: str, root: JS_Container):
         self.title = title
         self.root = root
 
