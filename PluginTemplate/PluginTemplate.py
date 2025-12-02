@@ -55,7 +55,9 @@ class ophelia_plugin(ABC):
             prompt:             str = "", 
             description:        str = "", 
             needs_args:         bool = False, 
+            type_of_input:      str = "console",
             command_map:        dict = None,    
+            quick_commands:     dict = None,
             help_text:          str = "", 
             access_level:       int = 0,
             git_repo:           str = "",
@@ -65,8 +67,10 @@ class ophelia_plugin(ABC):
             "name":             name, 
             "prompt":           prompt,  
             "description":      description,
-            "needs_args":       needs_args, 
+            "needs_args":       needs_args,
+            "type_of_input":    type_of_input,
             "command_map":      command_map or {}, 
+            "quick_commands":   quick_commands or {},
             "help_text":        help_text, 
             "access_level":     access_level,
             "git_repo":          git_repo,
@@ -195,7 +199,7 @@ class ophelia_plugin(ABC):
         func = self._meta["command_map"].get(command)
         if func is None:
             opr.error_pretty(
-                exc=ValueError(f"Command '{command}' not found in command map."),
+                exc=None,
                 name=self._meta["name"],
                 message=f"Unknown command: {command}",
                 level="INFO"
@@ -321,8 +325,8 @@ class ophelia_input():
 
         Returns
         -------
-        str
-            The user's input.
+        dict
+            Dictionary containing the user's input. The keys depend on the IDs defined in the DSL.JS_Page prompt.
 
         """
 

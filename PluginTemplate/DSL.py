@@ -11,14 +11,16 @@ class JS_Component(ABC):
 
     type: str = None
 
-    def __init__(self, id: str, **props):
+    def __init__(self, id: str, classes: str = None, **props):
         self.id = id
+        self.classes = classes
         self.props = props
 
     def serialize(self) -> Dict[str, Any]:
         return {
             "type": self.type,
             "id": self.id,
+            "classes": self.classes,
             "props": self.props
         }
 
@@ -26,8 +28,8 @@ class JS_Component(ABC):
 class JS_Container(JS_Component):
     """Base class for components that may contain children."""
 
-    def __init__(self, id: str, children: List["JS_Component"] = None, **props):
-        super().__init__(id, **props)
+    def __init__(self, id: str, classes: str = None, children: List["JS_Component"] = None, **props):
+        super().__init__(id=id, classes=classes, **props)
         self.children = children or []
 
     def add(self, *children: "JS_Component"):
@@ -63,43 +65,43 @@ class JS_Section(JS_Container):
 class JS_Label(JS_Component):
     type = "label"
 
-    def __init__(self, id: str, text: str, **props):
-        super().__init__(id, text=text, **props)
+    def __init__(self, id: str, text: str, classes: str = None, **props):
+        super().__init__(id=id, classes=classes, text=text, **props)
 
 
 class JS_TextBox(JS_Component):
     type = "input"
 
-    def __init__(self, id: str, label: str, hint: str = "", **props):
-        super().__init__(id, label=label, hint=hint, **props)
+    def __init__(self, id: str, label: str, hint: str = "", classes: str = None, **props):
+        super().__init__(id=id, classes=classes, label=label, hint=hint, **props)
 
 
 class JS_Select(JS_Component):
     type = "select"
 
-    def __init__(self, id: str, label: str, options: List[str], **props):
-        super().__init__(id, label=label, options=options, **props)
+    def __init__(self, id: str, label: str, options: List[str], classes: str = None, **props):
+        super().__init__(id=id, classes=classes, label=label, options=options, **props)
 
 
 class JS_Checkbox(JS_Component):
     type = "checkbox"
 
-    def __init__(self, id: str, label: str, options: List[str], **props):
-        super().__init__(id, label=label, options=options, **props)
+    def __init__(self, id: str, label: str, options: List[str], classes: str = None, **props):
+        super().__init__(id=id, classes=classes, label=label, options=options, **props)
 
 
 class JS_Radio(JS_Component):
     type = "radio"
 
-    def __init__(self, id: str, label: str, options: List[str], **props):
-        super().__init__(id, label=label, options=options, **props)
+    def __init__(self, id: str, label: str, options: List[str], classes: str = None, **props):
+        super().__init__(id=id, classes=classes, label=label, options=options, **props)
 
 
 class JS_Button(JS_Component):
     type = "button"
 
-    def __init__(self, id: str, text: str, **props):
-        super().__init__(id, text=text, **props)
+    def __init__(self, id: str, text: str, classes: str = None, **props):
+        super().__init__(id=id, classes=classes, text=text, **props)
 
 
 # -----------------------------
@@ -113,3 +115,4 @@ class JS_Page:
 
     def serialize(self):
         return {"title": self.title, "root": self.root.serialize()}
+
