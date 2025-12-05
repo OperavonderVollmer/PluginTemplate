@@ -46,6 +46,8 @@ class ophelia_plugin(ABC):
         Executes the plugin directly without user interaction.
     clean_up
         Performs cleanup tasks after executing the plugin.
+    input_scheme
+        Returns the input scheme for the plugin.
 
     
     """
@@ -76,6 +78,12 @@ class ophelia_plugin(ABC):
             "git_repo":          git_repo,
         }
     
+
+    def input_scheme(self, *args, **kwargs):
+        """
+        Returns the input scheme for the plugin.
+        """
+        pass
 
 
     def prep_execute(self, input_callable: Callable = None, output_callable: Callable = None, *args, **kwargs) -> str | tuple[str, str] | None:  # type: ignore
