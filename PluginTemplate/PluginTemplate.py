@@ -274,7 +274,7 @@ class ophelia_input():
                 id = "new-input-div",
                 children=[
                     DSL.JS_TextBox(
-                        id = "new-input",
+                        id = "generic_input",
                         label = "Input",
                         hint = "Input Required",
                         type = "text",
