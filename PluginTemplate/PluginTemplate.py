@@ -96,12 +96,13 @@ class ophelia_plugin(ABC):
         scheme = DSL.JS_Page(
             title= self._meta["name"],
             description= self._meta["description"],
+            prompt= self._meta["prompt"],
             root= root or DSL.JS_Container(
                 id= "root",
                 children= [
                     DSL.JS_Label(
-                        id= "prompt",
-                        text= self._meta["prompt"] or "Empty prompt",
+                        id= f"{self._meta['name']}_no_children",
+                        text= "No children",
                     )
                 ]
             ),
