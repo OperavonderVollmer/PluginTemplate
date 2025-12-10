@@ -106,6 +106,7 @@ class ophelia_plugin(ABC):
                 ]
             ),
         )
+        return scheme.serialize() if serialize else scheme
 
 
     def prep_execute(self, input_callable: Callable = None, output_callable: Callable = None, *args, **kwargs) -> str | tuple[str, str] | None:  # type: ignore
