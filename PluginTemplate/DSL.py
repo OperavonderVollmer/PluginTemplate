@@ -109,10 +109,11 @@ class JS_Button(JS_Component):
 # -----------------------------
 
 class JS_Page:
-    def __init__(self, title: str, root: JS_Container):
+    def __init__(self, title: str, description: str, root: JS_Container):
         self.title = title
+        self.description = description
         self.root = root
 
     def serialize(self):
-        return {"title": self.title, "root": self.root.serialize()}
+        return {"title": self.title, "description": self.description, "root": self.root.serialize()}
 

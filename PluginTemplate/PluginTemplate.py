@@ -16,10 +16,10 @@ class ophelia_plugin(ABC):
     ----------
     name : str
         The name of the plugin.
+    description : str
+        A description of the plugin.
     prompt : str, optional
         The prompt to display to the user.
-    description : str, optional
-        A description of the plugin.
     needs_args : bool, optional
         Whether the plugin requires arguments.
     command_map : list, optional
@@ -54,8 +54,8 @@ class ophelia_plugin(ABC):
     def __init__(
             self, 
             name:               str, 
+            description:        str, 
             prompt:             str = "", 
-            description:        str = "", 
             needs_args:         bool = False, 
             type_of_input:      str = "console",
             command_map:        dict = None,    
@@ -67,23 +67,45 @@ class ophelia_plugin(ABC):
 
         self._meta: dict = {
             "name":             name, 
-            "prompt":           prompt,  
             "description":      description,
+            "prompt":           prompt,  
             "needs_args":       needs_args,
             "type_of_input":    type_of_input,
             "command_map":      command_map or {}, 
             "quick_commands":   quick_commands or {},
             "help_text":        help_text, 
             "access_level":     access_level,
-            "git_repo":          git_repo,
+            "git_repo":         git_repo,
         }
     
 
-    def input_scheme(self, *args, **kwargs):
+    def input_scheme(self, root: DSL.JS_Container = None, serialize: bool = True):
         """
         Returns the input scheme for the plugin.
+
+        Parameters
+        ----------
+        serialize : bool, optional
+            Whether to serialize the input scheme.
+
+        Returns
+        -------
+        dict
+            The input scheme for the plugin.
         """
-        pass
+        scheme = DSL.JS_Page(
+            title= self._meta["name"],
+            description= self._meta["description"],
+            root= root or DSL.JS_Container(
+                id= "root",
+                children= [
+                    DSL.JS_Label(
+                        id= "prompt",
+                        text= self._meta["prompt"] or "Empty prompt",
+                    )
+                ]
+            ),
+        )
 
 
     def prep_execute(self, input_callable: Callable = None, output_callable: Callable = None, *args, **kwargs) -> str | tuple[str, str] | None:  # type: ignore
