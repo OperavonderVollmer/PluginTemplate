@@ -79,7 +79,7 @@ class ophelia_plugin(ABC):
         }
     
 
-    def input_scheme(self, root: DSL.JS_Container = None, serialize: bool = True):
+    def input_scheme(self, root: DSL.JS_Container = None, form: bool = None, serialize: bool = False):
         """
         Returns the input scheme for the plugin.
 
@@ -93,11 +93,13 @@ class ophelia_plugin(ABC):
         dict
             The input scheme for the plugin.
         """
+
         scheme = DSL.JS_Page(
             title= self._meta["name"],
             description= self._meta["description"],
             prompt= self._meta["prompt"],
-            root= root or DSL.JS_Container(
+            form= form or self._meta["needs_args"],
+            root= root or DSL.JS_Div(
                 id= "root",
                 children= [
                     DSL.JS_Label(
@@ -294,6 +296,8 @@ class ophelia_input():
     HUD_PORT = 6990
     DEFAULT_BROWSER_PROMPT = DSL.JS_Page(
             title= "Input Required",
+            description = "",
+            prompt = "",
             root= DSL.JS_Div(
                 id = "new-input-div",
                 children=[

@@ -109,12 +109,13 @@ class JS_Button(JS_Component):
 # -----------------------------
 
 class JS_Page:
-    def __init__(self, title: str, prompt: str, description: str, root: JS_Container):
+    def __init__(self, title: str, prompt: str, form: bool, description: str, root: JS_Container):
         self.title = title
         self.description = description
         self.prompt = prompt
+        self.form = form
         self.root = root
 
     def serialize(self):
-        return {"title": self.title, "description": self.description, "prompt": self.prompt, "root": self.root.serialize()}
+        return {"title": self.title, "description": self.description, "prompt": self.prompt, "form": self.form, "root": self.root.serialize()}
 
