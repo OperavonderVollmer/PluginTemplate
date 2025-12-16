@@ -298,6 +298,7 @@ class ophelia_input():
             title= "Input Required",
             description = "",
             prompt = "",
+            form = True,
             root= DSL.JS_Div(
                 id = "new-input-div",
                 children=[
