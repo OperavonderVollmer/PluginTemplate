@@ -105,6 +105,72 @@ class JS_Button(JS_Component):
 
 
 # -----------------------------
+# Headers
+# -----------------------------
+
+class JS_H1(JS_Component):
+    type = "h1"
+
+    def __init__(self, id: str, text: str, classes: str = None, **props):
+        super().__init__(id=id, classes=classes, text=text, **props)
+
+class JS_H2(JS_Component):
+    type = "h2"
+
+    def __init__(self, id: str, text: str, classes: str = None, **props):
+        super().__init__(id=id, classes=classes, text=text, **props)
+
+
+class JS_H3(JS_Component):
+    type = "h3"
+
+    def __init__(self, id: str, text: str, classes: str = None, **props):
+        super().__init__(id=id, classes=classes, text=text, **props)
+
+class JS_H4(JS_Component):
+    type = "h4"
+
+    def __init__(self, id: str, text: str, classes: str = None, **props):
+        super().__init__(id=id, classes=classes, text=text, **props)
+
+class JS_H5(JS_Component):
+    type = "h5"
+
+    def __init__(self, id: str, text: str, classes: str = None, **props):
+        super().__init__(id=id, classes=classes, text=text, **props)
+
+class JS_H6(JS_Component):
+    type = "h6"
+
+    def __init__(self, id: str, text: str, classes: str = None, **props):
+        super().__init__(id=id, classes=classes, text=text, **props)
+
+class JS_Header_Div(JS_Container):
+    type = "div"
+
+    def __init__(self, id: str, header: str, header_level: int, child: JS_Component, classes: str = None, **props):
+        super().__init__(id=id, classes=classes, **props)
+
+        # Map header_level to the corresponding class
+        heading_class_map = {
+            1: JS_H1,
+            2: JS_H2,
+            3: JS_H3,
+            4: JS_H4,
+            5: JS_H5,
+            6: JS_H6,
+        }
+
+        HeadingClass = heading_class_map.get(header_level, JS_H1)  # Default to H1 if invalid
+
+        # Create heading and label
+        heading_component: JS_Component = HeadingClass(id=f"{id}_header", text=header)
+
+        # Add them as children of the div
+        self.add(heading_component, child)
+
+
+# -----------------------------
 # Page Wrapper
 # -----------------------------
 
