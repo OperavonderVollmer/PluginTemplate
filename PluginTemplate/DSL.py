@@ -9,12 +9,19 @@ from typing import List, Dict, Any
 class JS_Component(ABC):
     """Base class for all components."""
 
-    type: str = None
+    type: str = None # type: ignore
 
     def __init__(self, id: str, classes: str = None, **props):
         self.id = id
         self.classes = classes
         self.props = props
+
+    def add_class(self, class_name: str):
+        if self.classes:
+            self.classes += f" {class_name}"
+        else:
+            self.classes = class_name
+        return self
 
     def serialize(self) -> Dict[str, Any]:
         return {
@@ -149,7 +156,8 @@ class JS_Header_Div(JS_Container):
     type = "div"
 
     def __init__(self, id: str, header: str, header_level: int, child: JS_Component, classes: str = None, **props):
-        super().__init__(id=id, classes=classes, **props)
+        c = f"headerDivDefault {classes}" 
+        super().__init__(id=id, classes=c, **props)
 
         # Map header_level to the corresponding class
         heading_class_map = {
@@ -165,9 +173,9 @@ class JS_Header_Div(JS_Container):
 
         # Create heading and label
         heading_component: JS_Component = HeadingClass(id=f"{id}_header", text=header)
-
+        indented_child = child.add_class("inputFieldDefaults")
         # Add them as children of the div
-        self.add(heading_component, child)
+        self.add(heading_component, indented_child)
 
 
 # -----------------------------
