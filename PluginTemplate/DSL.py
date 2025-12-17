@@ -18,7 +18,7 @@ class JS_Component(ABC):
 
     def add_class(self, class_name: str):
         if self.classes:
-            self.classes += f" {class_name}"
+            self.classes = f"{class_name} {self.classes}"
         else:
             self.classes = class_name
         return self
@@ -155,8 +155,8 @@ class JS_H6(JS_Component):
 class JS_Header_Div(JS_Container):
     type = "div"
 
-    def __init__(self, id: str, header: str, header_level: int, child: JS_Component, classes: str = None, **props):
-        c = f"headerDivDefault {classes}" 
+    def __init__(self, id: str, header: str, header_level: int, child: JS_Component, header_classes: str = None, div_classes: str = None, **props):
+        c = f"headerDivDefault {div_classes}" 
         super().__init__(id=id, classes=c, **props)
 
         # Map header_level to the corresponding class
@@ -173,6 +173,7 @@ class JS_Header_Div(JS_Container):
 
         # Create heading and label
         heading_component: JS_Component = HeadingClass(id=f"{id}_header", text=header)
+        heading_component.add_class(header_classes or "headerDefault")
         indented_child = child.add_class("inputFieldDefaults")
         # Add them as children of the div
         self.add(heading_component, indented_child)
