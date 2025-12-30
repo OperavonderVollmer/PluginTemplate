@@ -225,7 +225,7 @@ class ophelia_plugin(ABC):
                     raise ValueError
                 command = commands[choice - 1]
             except ValueError as e:
-                opr.print_from(self._meta["name"], message=f"{self._meta["name"]} command cancelled")
+                opr.print_from(self._meta["name"], message=f"{self._meta['name']} command cancelled")
                 return None
 
 
