@@ -79,7 +79,7 @@ class ophelia_plugin(ABC):
         }
     
 
-    def input_scheme(self, root: DSL.JS_Container = None, form: bool = None, serialize: bool = False):
+    def input_scheme(self, root: DSL.JS_Container = None, form: bool = None, serialize: bool = False, effects: dict = {}, presets: dict = {}):
         """
         Returns the input scheme for the plugin.
 
@@ -107,7 +107,9 @@ class ophelia_plugin(ABC):
                         text= "No children",
                     )
                 ]
-            ),
+            ),        
+            effects= effects,
+            presets= presets,
         )
         return scheme.serialize() if serialize else scheme
 

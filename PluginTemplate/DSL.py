@@ -184,13 +184,15 @@ class JS_Header_Div(JS_Container):
 # -----------------------------
 
 class JS_Page:
-    def __init__(self, title: str, prompt: str, form: bool, description: str, root: JS_Container):
+    def __init__(self, title: str, prompt: str, form: bool, description: str, root: JS_Container, effects: dict = {}, presets: dict = {}):
         self.title = title
         self.description = description
         self.prompt = prompt
         self.form = form
         self.root = root
+        self.effects = effects
+        self.presets = presets
 
     def serialize(self):
-        return {"title": self.title, "description": self.description, "prompt": self.prompt, "form": self.form, "root": self.root.serialize()}
+        return {"title": self.title, "description": self.description, "prompt": self.prompt, "form": self.form, "root": self.root.serialize(), "effects": self.effects, "presets": self.presets}
 
