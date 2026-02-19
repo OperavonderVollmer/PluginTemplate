@@ -211,10 +211,10 @@ class ophelia_plugin(ABC):
         """
         commands = list(self._meta["command_map"].keys())
 
-        opr.list_choices(choices=commands, title=f"Available commands for {self._meta['name']}")
 
         # If no command is pre-specified, ask user to select one
         if command is None:
+            opr.list_choices(choices=commands, title=f"Available commands for {self._meta['name']}")
             raw = opr.input_from(
                 name=self._meta["name"],
                 message=f"Select command (1 - {len(commands)}) or enter to cancel",
