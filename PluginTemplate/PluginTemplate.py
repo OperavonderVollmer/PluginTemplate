@@ -98,7 +98,7 @@ class ophelia_plugin(ABC):
             title= self._meta["name"],
             description= self._meta["description"],
             prompt= self._meta["prompt"],
-            form= form or self._meta["needs_args"],
+            form= form if form is not None else self._meta["needs_args"],
             root= root or DSL.JS_Div(
                 id= "root",
                 children= [
